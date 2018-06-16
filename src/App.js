@@ -1,29 +1,21 @@
 import React, { Component } from 'react';
-import firebase from 'firebase';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Start from './Start.js';
 import Game from './Game.js';
 
-const config = {
-  apiKey: 'AIzaSyCrgBJMTaiUIJi8hoPvUiMbeyiqvGLFaWo',
-  authDomain: 'coding-project-wd.firebaseapp.com',
-  databaseURL: 'https://coding-project-wd.firebaseio.com',
-  projectId: 'coding-project-wd',
-  storageBucket: 'coding-project-wd.appspot.com',
-  messagingSenderId: '985640520772'
-};
+const Page = () => <h1> Hmmmmm... this page doesn't exist</h1>;
 
-firebase.initializeApp(config);
 class App extends Component {
   state = { something: 'nothing', grace: 'great' };
   render() {
     console.log(this.state.something);
     return (
       <BrowserRouter>
-        <div>
+        <Switch>
           <Route exact path="/" component={Start} />
           <Route exact path="/game" component={Game} />
-        </div>
+          <Route component={Page} />
+        </Switch>
       </BrowserRouter>
     );
   }
