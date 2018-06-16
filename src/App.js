@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Start from './Start.js';
+import Game from './Game.js';
+
+const Page = () => <h1> Hmmmmm... this page doesn't exist</h1>;
 
 class App extends Component {
+  state = { something: 'nothing', grace: 'great' };
   render() {
+    console.log(this.state.something);
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={Start} />
+          <Route exact path="/game" component={Game} />
+          <Route component={Page} />
+        </Switch>
+      </BrowserRouter>
     );
   }
 }
