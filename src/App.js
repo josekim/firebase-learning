@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import { HashRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import Start from './Start.js';
+import Game from './Game.js';
 
 const config = {
   apiKey: 'AIzaSyCrgBJMTaiUIJi8hoPvUiMbeyiqvGLFaWo',
@@ -18,11 +19,12 @@ class App extends Component {
   render() {
     console.log(this.state.something);
     return (
-      <HashRouter>
+      <BrowserRouter>
         <div>
           <Route exact path="/" component={Start} />
+          <Route exact path="/game" component={Game} />
         </div>
-      </HashRouter>
+      </BrowserRouter>
     );
   }
 }
