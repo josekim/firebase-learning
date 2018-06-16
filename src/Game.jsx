@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
+import Letter from './Letter.jsx';
+
 const config = {
   apiKey: 'AIzaSyCrgBJMTaiUIJi8hoPvUiMbeyiqvGLFaWo',
   authDomain: 'coding-project-wd.firebaseapp.com',
@@ -30,19 +32,18 @@ class Game extends Component {
     }
     return randomLetters
       .split('')
-      .sort(function() {
-        return 0.5 - Math.random();
-      })
+      .sort(() => 0.5 - Math.random())
       .join('');
   };
 
   render() {
     database.ref('game1').set({ hello: 'world' });
-    console.log(database);
-    console.log(this.createRandomLetters());
+    console.log(this.createRandomLetters().split(''));
     return (
       <div>
-        <p>this is game</p>
+        {this.createRandomLetters()
+          .split('')
+          .map((letter, idx) => <Letter key={idx} letter={letter} />)}
       </div>
     );
   }
