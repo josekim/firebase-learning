@@ -15,6 +15,7 @@ class Game extends Component {
   update = snapshot => {
     const gameState = snapshot.val();
     console.log(snapshot.val());
+    this.setState(snapshot.val());
   };
 
   createRandomLetters = () => {
@@ -53,6 +54,7 @@ class Game extends Component {
       const timer = setInterval(this.updateTimer, 1000);
       this.setState({ time: 10 }, () => {
         this.setState({ timer });
+        this.props.database.ref(this.state.gameID).set({ time: 10 });
       });
     }
   };
