@@ -4,17 +4,17 @@ import Letter from './Letter';
 class Game extends Component {
   state = { gameID: this.props.match.params.ID, board: '', time: 0 };
 
-  update = snapshot => {
-    const gameState = snapshot.val();
-    console.log(snapshot.val());
-  };
-
   componentDidMount = () => {
     console.log('did Mount', this.props, this.state);
     const board = this.createRandomLetters();
     this.setState({ board });
     this.props.database.ref(this.state.gameID).set({ board });
     this.props.database.ref(this.state.gameID).on('value', this.update);
+  };
+
+  update = snapshot => {
+    const gameState = snapshot.val();
+    console.log(snapshot.val());
   };
 
   createRandomLetters = () => {
@@ -36,20 +36,28 @@ class Game extends Component {
       .sort(() => 0.5 - Math.random())
       .join('');
   };
+
   updateTimer = () => {
-    this.setState(state => ({ time: state.time - 1 }));
+    this.setState(state => {
+      if (state.time - 1 === 0) {
+        clearInterval(state.timer);
+      }
+      return { time: state.time - 1, timer: state.time - 1 ? state.timer : null };
+    });
     this.props.database.ref(this.state.gameID).set({ time: this.state.time });
   };
 
   timer = () => {
     // Update the count down every 1 second
-    const timer = setInterval(this.updateTimer, 1000);
-    this.setState({ timer, time: 60 });
+    if (!this.state.timer) {
+      const timer = setInterval(this.updateTimer, 1000);
+      this.setState({ time: 10 }, () => {
+        this.setState({ timer });
+      });
+    }
   };
 
   render() {
-    console.log(this.state.gameID);
-    console.log(this.props);
     return (
       <div>
         {this.state.board.split('').map((letter, idx) => <Letter key={idx} letter={letter} />)}
