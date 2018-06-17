@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import firebase from 'firebase';
-import Letter from './Letter.jsx';
-
-const config = {
-  apiKey: 'AIzaSyCrgBJMTaiUIJi8hoPvUiMbeyiqvGLFaWo',
-  authDomain: 'coding-project-wd.firebaseapp.com',
-  databaseURL: 'https://coding-project-wd.firebaseio.com',
-  projectId: 'coding-project-wd',
-  storageBucket: 'coding-project-wd.appspot.com',
-  messagingSenderId: '985640520772'
-};
-firebase.initializeApp(config);
-const database = firebase.database();
+import Letter from './Letter';
 
 class Game extends Component {
-  state = {};
+  state = { gameID: this.props.match.params.ID, board: '', time: 0 };
+
+  update = snapshot => {
+    const gameState = snapshot.val();
+    console.log(snapshot.val());
+  };
+
+  componentDidMount = () => {
+    console.log('did Mount', this.props, this.state);
+    const board = this.createRandomLetters();
+    this.setState({ board });
+    this.props.database.ref(this.state.gameID).set({ board });
+    this.props.database.ref(this.state.gameID).on('value', this.update);
+  };
 
   createRandomLetters = () => {
     let randomLetters = '';
@@ -35,15 +36,26 @@ class Game extends Component {
       .sort(() => 0.5 - Math.random())
       .join('');
   };
+  updateTimer = () => {
+    this.setState(state => ({ time: state.time - 1 }));
+    this.props.database.ref(this.state.gameID).set({ time: this.state.time });
+  };
+
+  timer = () => {
+    // Update the count down every 1 second
+    const timer = setInterval(this.updateTimer, 1000);
+    this.setState({ timer, time: 60 });
+  };
 
   render() {
-    database.ref('game1').set({ hello: 'world' });
-    console.log(this.createRandomLetters().split(''));
+    console.log(this.state.gameID);
+    console.log(this.props);
     return (
       <div>
-        {this.createRandomLetters()
-          .split('')
-          .map((letter, idx) => <Letter key={idx} letter={letter} />)}
+        {this.state.board.split('').map((letter, idx) => <Letter key={idx} letter={letter} />)}
+        <div id="demo"> </div>
+        <p> timer {this.state.time} </p>
+        <button onClick={this.timer}>timer</button>
       </div>
     );
   }
