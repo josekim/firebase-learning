@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
+import getUniquePermutations from 'get-unique-permutations';
 import Letter from './Letter';
+import TypingField from './TypingField';
+import ScoreBoard from './ScoreBoard';
 
 class Game extends Component {
-  state = { gameID: this.props.match.params.ID, board: '', time: 0 };
+  state = { gameID: this.props.match.params.ID, board: '', time: 0, words: [], solution: {} };
 
   componentDidMount = () => {
-    console.log('did Mount', this.props, this.state);
-    const board = this.createRandomLetters();
+    const board = 'LetsPlay';
     this.setState({ board });
-    this.props.database.ref(this.state.gameID).set({ board });
+    this.props.database.ref(this.state.gameID).set({ time: 0, board });
+
     this.props.database.ref(this.state.gameID).on('value', this.update);
   };
 
   update = snapshot => {
     const gameState = snapshot.val();
-    console.log(snapshot.val());
     this.setState(snapshot.val());
   };
 
@@ -45,17 +47,42 @@ class Game extends Component {
       }
       return { time: state.time - 1, timer: state.time - 1 ? state.timer : null };
     });
-    this.props.database.ref(this.state.gameID).set({ time: this.state.time });
+    this.props.database.ref(this.state.gameID).update({ time: this.state.time });
   };
 
   timer = () => {
     // Update the count down every 1 second
     if (!this.state.timer) {
+      const board = this.createRandomLetters();
+      this.setState({ board });
+      // Wasn't able to find a api to hit, so i'm just coming up with some fake words here
+      const solution = this.getSolution(board);
       const timer = setInterval(this.updateTimer, 1000);
-      this.setState({ time: 10 }, () => {
+      this.props.database.ref(this.state.gameID).set({ time: 60, solution, board });
+
+      this.setState({ time: 60, board }, () => {
         this.setState({ timer });
-        this.props.database.ref(this.state.gameID).set({ time: 10 });
       });
+    }
+  };
+
+  getSolution = board => {
+    let solution = getUniquePermutations(board.slice(2, 6).split(''));
+    solution = solution.map(word => word.join(''));
+    let objectSolution = {};
+    for (let idx = 0; idx < solution.length; idx++) {
+      objectSolution[solution[idx]] = '';
+    }
+    return objectSolution;
+  };
+
+  notIncluded = word => !this.state.solution[word] && this.state.solution[word] !== undefined;
+
+  handleOnSubmit = word => {
+    if (this.notIncluded(word)) {
+      let newSolution = this.state.solution;
+      newSolution[word] = 'host';
+      this.setState({ solution: newSolution }, () => this.props.database.ref(this.state.gameID).update({ solution: newSolution }));
     }
   };
 
@@ -65,7 +92,9 @@ class Game extends Component {
         {this.state.board.split('').map((letter, idx) => <Letter key={idx} letter={letter} />)}
         <div id="demo"> </div>
         <p> timer {this.state.time} </p>
-        <button onClick={this.timer}>timer</button>
+        <button onClick={this.timer}>Start Game</button>
+        <TypingField handleOnSubmit={this.handleOnSubmit} board={this.state.board} />
+        <ScoreBoard gameBoard={this.state.solution} time={this.state.time} />
       </div>
     );
   }
