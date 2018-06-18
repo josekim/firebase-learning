@@ -89,7 +89,8 @@ class Game extends Component {
         {this.state.board.split('').map((letter, idx) => <Letter key={idx} letter={letter} />)}
         <div id="demo"> </div>
         <p> timer {this.state.time} </p>
-        <button onClick={this.timer}>Start Game</button>
+        <button onClick={this.timer}>Start Game</button> <br />
+        <br />
         <TypingField handleOnSubmit={this.handleOnSubmit} board={this.state.board} />
         <ScoreBoard gameBoard={this.state.solution} time={this.state.time} />
       </div>
