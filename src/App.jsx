@@ -20,7 +20,7 @@ const database = firebase.database();
 const Page = () => <h1> Hmmmmm... this page doesn't exist</h1>;
 
 class App extends Component {
-  state = { something: 'nothing', grace: 'great', database };
+  state = { something: 'nothing' };
   render() {
     console.log(this.state.something);
     return (
