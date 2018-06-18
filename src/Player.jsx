@@ -7,7 +7,6 @@ class Player extends Component {
   state = { gameID: this.props.match.params.ID, player: this.props.match.params.player, board: '', time: 0 };
 
   update = snapshot => {
-    const gameState = snapshot.val();
     this.setState(snapshot.val());
   };
 

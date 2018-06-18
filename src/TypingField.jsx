@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 class TypingField extends Component {
   state = { input: '', board: this.props.board };
