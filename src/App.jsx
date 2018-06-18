@@ -17,7 +17,7 @@ const config = {
 firebase.initializeApp(config);
 const database = firebase.database();
 
-const Page = () => <h1> Hmmmmm... this page doesn't exist</h1>;
+const Page404 = () => <h1> Hmmmmm... this page doesn't exist</h1>;
 
 class App extends Component {
   render() {
@@ -29,7 +29,7 @@ class App extends Component {
             <Route exact path="/" component={Start} />
             <Route exact path="/game/:ID" render={props => <Game {...props} database={database} />} />
             <Route exact path="/game/:ID/:player" render={props => <Player {...props} database={database} />} />
-            <Route component={Page} />
+            <Route component={Page404} />
           </Switch>
         </div>
       </BrowserRouter>

@@ -46,6 +46,12 @@ npm run start
 ### Player
 - If i had time, i would go back and refactor Game to be used, since most of the stuff is used, but for sake of complexity and ease of development, time constraints, i just made an extra component for simplicity
 
+### App
+- contains the Firebase init code
+- contains all the routing
+- used a render function on the routes to be able to pass firebase as a prop.
+- page404 for routes that don't exit
+
 ## Game Component
 - is the most complex potion
 - renders a start Button
