@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const ScoreBoard = props => {
-  const { gameBoard, time } = props;
+  const { gameBoard } = props;
   let solution = gameBoard || {};
   let players = {};
   let displayPlayers = [];

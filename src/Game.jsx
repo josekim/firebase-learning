@@ -5,7 +5,7 @@ import TypingField from './TypingField';
 import ScoreBoard from './ScoreBoard';
 
 class Game extends Component {
-  state = { gameID: this.props.match.params.ID, board: '', time: 0, words: [], solution: {} };
+  state = { gameID: this.props.match.params.ID, board: '', time: 0, solution: {}, timer: null };
 
   componentDidMount = () => {
     const board = 'LetsPlay';
@@ -16,7 +16,6 @@ class Game extends Component {
   };
 
   update = snapshot => {
-    const gameState = snapshot.val();
     this.setState(snapshot.val());
   };
 
@@ -40,16 +39,6 @@ class Game extends Component {
       .join('');
   };
 
-  updateTimer = () => {
-    this.setState(state => {
-      if (state.time - 1 === 0) {
-        clearInterval(state.timer);
-      }
-      return { time: state.time - 1, timer: state.time - 1 ? state.timer : null };
-    });
-    this.props.database.ref(this.state.gameID).update({ time: this.state.time });
-  };
-
   timer = () => {
     // Update the count down every 1 second
     if (!this.state.timer) {
@@ -60,10 +49,18 @@ class Game extends Component {
       const timer = setInterval(this.updateTimer, 1000);
       this.props.database.ref(this.state.gameID).set({ time: 60, solution, board });
 
-      this.setState({ time: 60, board }, () => {
-        this.setState({ timer });
-      });
+      this.setState({ time: 60, board, timer });
     }
+  };
+
+  updateTimer = () => {
+    this.setState(state => {
+      if (state.time - 1 === 0) {
+        clearInterval(state.timer);
+      }
+      return { time: state.time - 1, timer: state.time - 1 ? state.timer : null };
+    });
+    this.props.database.ref(this.state.gameID).update({ time: this.state.time });
   };
 
   getSolution = board => {
