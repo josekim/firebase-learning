@@ -15,6 +15,7 @@ const Start = () => {
       <Link to={`/game/${gameNumber}`}>
         <p>Start a Game</p>{' '}
       </Link>
+
       <Link to={`/game/${gameNumber}/player2`}>
         <p> Link for your Friend</p>
       </Link>
